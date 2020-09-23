@@ -23,6 +23,7 @@ namespace TradingAutoTerminal
         MACD Macd;
         List<double> macd;
         List<double> signal;
+        List<double> histogram;
 
         ConnorsRSI Crsi;
 
@@ -47,6 +48,7 @@ namespace TradingAutoTerminal
             Prices = new List<double>();
             macd = new List<double>();
             signal = new List<double>();
+            histogram = new List<double>();
 
         }
 
@@ -91,6 +93,7 @@ namespace TradingAutoTerminal
             {
                 macd.Add(val.FastMACD);
                 signal.Add(val.Signal);
+                histogram.Add(val.Histogram);
             }
             lblMacd.Text = Macd.Name;
         }
@@ -175,24 +178,43 @@ namespace TradingAutoTerminal
             areaIndicators.CursorX.IsUserEnabled = true;
             areaIndicators.AxisX.Minimum = Xmin;
             areaIndicators.AxisX.Maximum = Xmax;
+            areaIndicators.AxisY2.MajorGrid.Enabled = false;
+            //Привязка к верхнему графику
+            areaIndicators.AlignWithChartArea = areaNameCandles;
 
             var seriesMacd = chart1.Series.FindByName(seriesMacdName);
             if (seriesMacd == null)
                 seriesMacd = chart1.Series.Add(seriesMacdName);
-            seriesMacd.ChartType = SeriesChartType.Spline;
-            seriesMacd.YAxisType = AxisType.Secondary;
+            seriesMacd.YAxisType = AxisType.Secondary; // ось Y справа
             seriesMacd.Color = Color.Blue;
-            seriesMacd.Points.DataBindY(macd);
             seriesMacd.ChartArea = areaNameIndicators;
 
-            var seriesMacdSig = chart1.Series.FindByName(seriesMacdSigName);
-            if (seriesMacdSig == null)
-                seriesMacdSig = chart1.Series.Add(seriesMacdSigName);
-            seriesMacdSig.ChartType = SeriesChartType.Spline;
-            seriesMacdSig.YAxisType = AxisType.Secondary;
-            seriesMacdSig.Color = Color.DarkGreen;
-            seriesMacdSig.Points.DataBindY(signal);
-            seriesMacdSig.ChartArea = areaNameIndicators;
+            if (checkMACDHistogram.Checked)
+            {
+                //MACD в виде гистограммы
+                seriesMacd.ChartType = SeriesChartType.Column; //.Spline
+                seriesMacd.Points.DataBindY(histogram);
+                //удаление данных для сигнальной линии если они есть
+                var seriesMacdSig = chart1.Series.FindByName(seriesMacdSigName);
+                if (seriesMacdSig != null)
+                    chart1.Series.Remove(seriesMacdSig);
+            }
+            else
+            {
+                //MACD в виде двух линий
+                seriesMacd.ChartType = SeriesChartType.Spline;
+                seriesMacd.Points.DataBindY(macd);
+
+                var seriesMacdSig = chart1.Series.FindByName(seriesMacdSigName);
+                if (seriesMacdSig == null)
+                    seriesMacdSig = chart1.Series.Add(seriesMacdSigName);
+                seriesMacdSig.ChartType = SeriesChartType.Spline;
+                seriesMacdSig.YAxisType = AxisType.Secondary;
+                seriesMacdSig.Color = Color.DarkGreen;
+                seriesMacdSig.Points.DataBindY(signal);
+                seriesMacdSig.ChartArea = areaNameIndicators;
+
+            }
         }
 
         private void btnAddCRSI_Click(object sender, EventArgs e)

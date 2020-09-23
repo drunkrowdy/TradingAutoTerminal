@@ -36,8 +36,9 @@ namespace TechnicalAnalysis
     }
     class MACDValue
     {
-        public double FastMACD;
-        public double Signal;
+        public double FastMACD { get; set; }
+        public double Signal { get; set; }
+        public double Histogram { get; set; }
     }
 
 
@@ -47,7 +48,7 @@ namespace TechnicalAnalysis
         int SlowMA_Period; 
         int Signal_Period;
         SubtotalsMACD Subtotals;
-        public new List<MACDValue> Values;
+        public new List<MACDValue> Values { get; set; }
 
         /// <summary>
         /// Возвращает список значений, соответствующих индикатору MACD за указанный период
@@ -151,6 +152,7 @@ namespace TechnicalAnalysis
             var m = new MACDValue();
             m.FastMACD = s.EMA_fast - s.EMA_slow;
             m.Signal = (m.FastMACD - s.EMA_sig) * s.A_sig + s.EMA_sig;
+            m.Histogram = m.FastMACD - m.Signal;
             s.EMA_sig = m.Signal;
 
             //var p = Rates[i];

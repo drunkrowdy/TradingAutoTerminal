@@ -55,6 +55,7 @@
             this.tpgSettings = new System.Windows.Forms.TabPage();
             this.txtbxCount = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.checkMACDHistogram = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tpgGraph.SuspendLayout();
@@ -151,6 +152,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.checkMACDHistogram);
             this.groupBox1.Controls.Add(this.comboBox1);
             this.groupBox1.Controls.Add(this.btnAddCRSI);
             this.groupBox1.Controls.Add(this.btnAddMACD);
@@ -173,12 +175,13 @@
             // 
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Items.AddRange(new object[] {
-            "50",
-            "200",
-            "100",
-            "250",
             "2",
-            "10"});
+            "10",
+            "50",
+            "100",
+            "150",
+            "200",
+            "250"});
             this.comboBox1.Location = new System.Drawing.Point(101, 133);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(73, 21);
@@ -301,6 +304,16 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Количество отображаемых свечей";
             // 
+            // checkMACDHistogram
+            // 
+            this.checkMACDHistogram.AutoSize = true;
+            this.checkMACDHistogram.Location = new System.Drawing.Point(100, 174);
+            this.checkMACDHistogram.Name = "checkMACDHistogram";
+            this.checkMACDHistogram.Size = new System.Drawing.Size(94, 17);
+            this.checkMACDHistogram.TabIndex = 9;
+            this.checkMACDHistogram.Text = "Гистограмма";
+            this.checkMACDHistogram.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -350,6 +363,7 @@
         private System.Windows.Forms.TextBox txtbxCount;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.CheckBox checkMACDHistogram;
     }
 }
 
