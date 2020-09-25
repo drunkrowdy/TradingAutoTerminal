@@ -12,12 +12,15 @@ using static TradingAutoTerminal.Helpers.Helper;
 using TradingAutoTerminal.ExmoObjects;
 using TechnicalAnalysis;
 using System.Windows.Forms.DataVisualization.Charting;
+using TradingAutoTerminal.DataSource;
+using TradingAutoTerminal.TestDataSource;
 
 namespace TradingAutoTerminal
 {
     public partial class MainForm : Form
     {
-        List<Candle> Candles;
+        TestHistoricalData SourceData;
+        List<Candle> Candles => SourceData.Candles;
         List<double> Prices;
         
         MACD Macd;
@@ -44,7 +47,8 @@ namespace TradingAutoTerminal
         public MainForm()
         {
             InitializeComponent();
-            Candles = new List<Candle>();
+            //Candles = new List<Candle>();
+
             Prices = new List<double>();
             macd = new List<double>();
             signal = new List<double>();
@@ -54,8 +58,20 @@ namespace TradingAutoTerminal
 
         private void btnLoadCandles_Click(object sender, EventArgs e)
         {
-            string file = "Data/ExampleData-BTC_USD.txt";
-            string text = ReadStringFromFile(file);
+            string file = "DataSource/ExampleData-BTC_USD.txt";
+            var sd = new TestHistoricalData(15, file);
+            if (sd.IsValid)
+            {
+                SourceData = sd;
+                lblLoad.Text = "Ok";
+                CalculateGraphBoundaries();
+            }
+            else
+            {
+                lblLoad.Text = "!Ошибка загрузки";
+            }
+            
+            /*string text = ReadStringFromFile(file);
             if (text != null)
             {
                 text = text.Replace("\r", "");
@@ -65,13 +81,16 @@ namespace TradingAutoTerminal
                 foreach (string v in str)
                 {
                     var s = v.Split('/');
-                    var c = new Candle();
+                    //var c = new TestCandle();
                     try
                     {
-                        c.Open = Convert.ToDouble(s[1]);
-                        c.High = Convert.ToDouble(s[2]);
-                        c.Low = Convert.ToDouble(s[3]);
-                        c.Close = Convert.ToDouble(s[4]);
+                        var c = new TestCandle()
+                        {
+                            Open = Convert.ToDouble(s[1]),
+                            High = Convert.ToDouble(s[2]),
+                            Low = Convert.ToDouble(s[3]),
+                            Close = Convert.ToDouble(s[4])
+                        };
                         Candles.Add(c);
                         Prices.Add(c.Close);
                     }
@@ -84,11 +103,12 @@ namespace TradingAutoTerminal
             {
                 lblLoad.Text = "!Ошибка загрузки";
             }
+            */
         }
 
         private void btnMACD_Click(object sender, EventArgs e)
         {
-            Macd = new MACD(Prices,12,26,9,"MACD(12,26,9)");
+            Macd = new MACD(SourceData.ClosingPrices,12,26,9,"MACD(12,26,9)");
             foreach (var val in Macd.Values)
             {
                 macd.Add(val.FastMACD);
@@ -100,7 +120,7 @@ namespace TradingAutoTerminal
 
         private void btnCRSI_Click(object sender, EventArgs e)
         {
-            Crsi = new ConnorsRSI(Prices, 3, 2, 100, "CRSI(3,2,100)");
+            Crsi = new ConnorsRSI(SourceData.OpeningPrices, 3, 2, 100, "CRSI(3,2,100)");
             lblCrsi.Text = Crsi.Name;
         }
 

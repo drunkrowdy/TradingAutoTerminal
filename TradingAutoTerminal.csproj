@@ -47,7 +47,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExmoObjects\Candle.cs" />
+    <Compile Include="DataSource\Candle.cs" />
+    <Compile Include="DataSource\IRateManagment.cs" />
+    <Compile Include="DataSource\ITradeSourceData.cs" />
+    <Compile Include="ExmoObjects\ExmoCandle.cs" />
     <Compile Include="Helpers\Helper.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -62,6 +65,8 @@
     <Compile Include="TechnicalAnalysis\MACD.cs" />
     <Compile Include="TechnicalAnalysis\RSI.cs" />
     <Compile Include="TechnicalAnalysis\Subtotals.cs" />
+    <Compile Include="TestDataSource\TestCandle.cs" />
+    <Compile Include="TestDataSource\TestHistoricalData.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -88,9 +93,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Data\ExampleData-BTC_USD.txt">
+    <Content Include="DataSource\ExampleData-BTC_USD.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
